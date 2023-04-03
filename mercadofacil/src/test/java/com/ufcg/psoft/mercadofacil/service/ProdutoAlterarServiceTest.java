@@ -39,7 +39,7 @@ public class ProdutoAlterarServiceTest {
         Mockito.when(produtoRepository.update(produto))
                 .thenReturn(Produto.builder()
                         .id(10L)
-                        .codigoBarra("7899137500100")
+                        .codigoBarra("7899137500117")
                         .nome("Nome Produto Alterado")
                         .fabricante("Nome Fabricante Alterado")
                         .preco(500.00)
@@ -60,6 +60,42 @@ public class ProdutoAlterarServiceTest {
     }
 
     @Test
+    @DisplayName("Quando altero o nome do fabricante com dados válidos")
+    void alterarFabricanteDoProduto() {
+        /* AAA Pattern */
+        //Arrange
+        produto.setFabricante("Nome Fabricante Alterado");
+        //Act
+        Produto resultado = driver.alterar(produto);
+        //Assert
+        assertEquals("Nome Fabricante Alterado", resultado.getFabricante());
+    }
+
+    @Test
+    @DisplayName("Quando altero o preço do produto com dados válidos")
+    void alterarPrecoDoProduto() {
+        /* AAA Pattern */
+        //Arrange
+        produto.setPreco(500.00);
+        //Act
+        Produto resultado = driver.alterar(produto);
+        //Assert
+        assertEquals(500.00, resultado.getPreco());
+    }
+
+    @Test
+    @DisplayName("Quando altero o codigo de barra com dados válidos")
+    void alterarCodigoDoProduto() {
+        /* AAA Pattern */
+        //Arrange
+        produto.setCodigoBarra("7899137500117");
+        //Act
+        Produto resultado = driver.alterar(produto);
+        //Assert
+        assertEquals("7899137500117", resultado.getCodigoBarra());
+    }
+
+    @Test
     @DisplayName("Quando o preço é menor ou igual a zero")
     void precoMenorIgualAZero() {
         //Arrange
@@ -71,6 +107,48 @@ public class ProdutoAlterarServiceTest {
         );
         //Assert
         assertEquals("Preco invalido!", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Quando o codigo de barras tem digito verificador invalido")
+    void digitoVerificadorInvalido() {
+        //Arrange
+        produto.setCodigoBarra("7899137500104");
+        //Act
+        RuntimeException thrown = assertThrows(
+                RuntimeException.class,
+                () -> driver.alterar(produto)
+        );
+        //Assert
+        assertEquals("Codigo de barra com digito verificador incorreto!", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Quando o codigo de barras tem pais invalido")
+    void codigoPaisInvalido() {
+        //Arrange
+        produto.setCodigoBarra("9879137500104");
+        //Act
+        RuntimeException thrown = assertThrows(
+                RuntimeException.class,
+                () -> driver.alterar(produto)
+        );
+        //Assert
+        assertEquals("Codigo de barra com país errado", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Quando o codigo de barras tem empresa invalida")
+    void codigoEmpresaInvalida() {
+        //Arrange
+        produto.setCodigoBarra("7895137500104");
+        //Act
+        RuntimeException thrown = assertThrows(
+                RuntimeException.class,
+                () -> driver.alterar(produto)
+        );
+        //Assert
+        assertEquals("Codigo de barra com empresa errada!", thrown.getMessage());
     }
 }
 
