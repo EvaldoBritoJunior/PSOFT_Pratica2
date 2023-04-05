@@ -117,7 +117,7 @@ class VolatilLoteRepositoryTest {
    
    
    @Test
-   @DisplayName("Update no único Lote no repositorio de dados")
+   @DisplayName("Update no unico Lote no repositorio de dados")
    void updatePrimeiroLote() {
        driver.save(lote);
        resultado = driver.update(lote);
@@ -155,7 +155,7 @@ class VolatilLoteRepositoryTest {
    }
    
    @Test
-   @DisplayName("Deletar o único Lote no repositorio de dados")
+   @DisplayName("Deletar o unico Lote no repositorio de dados")
    void deletePrimeiroLote() {
        driver.save(lote);
        driver.delete(lote);
