@@ -85,22 +85,39 @@ public class ProdutoV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando altero o codigo de barra com dados válidos")
-        void alterarCodigoDoProduto() throws Exception {
-            /* AAA Pattern */
+        @DisplayName("Quando altero o nome do produto com dados invalidos")
+        void alterarNomeInvalido() {
             //Arrange
-            produto.setCodigoBarra("7899137500117");
+            produto.setNome(null);
             //Act
-            String responseJsonString = driver.perform(put("/v1/produtos/" + produto.getId())
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(produto)))
-                    .andExpect(status().isOk())
-                    .andDo(print())
-                    .andReturn().getResponse().getContentAsString();
-
-            Produto resultado = objectMapper.readValue(responseJsonString, Produto.ProdutoBuilder.class).build();
+            ServletException thrown = assertThrows(
+                    ServletException.class,
+                    () -> driver.perform(put("/v1/produtos/" + produto.getId())
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(objectMapper.writeValueAsString(produto)))
+                            .andExpect(status().isOk())
+                            .andDo(print())
+                            .andReturn().getResponse().getContentAsString());
             //Assert
-            assertEquals("7899137500117", resultado.getCodigoBarra());
+            assertEquals("Request processing failed: java.lang.RuntimeException: Atributos faltando!", thrown.getMessage());
+        }
+
+        @Test
+        @DisplayName("Quando o fabricante é invalido")
+        void alterarFabricanteInvalido() {
+            //Arrange
+            produto.setFabricante(null);
+            //Act
+            ServletException thrown = assertThrows(
+                    ServletException.class,
+                    () -> driver.perform(put("/v1/produtos/" + produto.getId())
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(objectMapper.writeValueAsString(produto)))
+                            .andExpect(status().isOk())
+                            .andDo(print())
+                            .andReturn().getResponse().getContentAsString());
+            //Assert
+            assertEquals("Request processing failed: java.lang.RuntimeException: Atributos faltando!", thrown.getMessage());
         }
 
     }
@@ -152,6 +169,26 @@ public class ProdutoV1ControllerTests {
     @Nested
     @DisplayName("Conjunto de casos de verificação da validação do código de barras")
     class ProdutoValidacaoCodigoDeBarras {
+
+        @Test
+        @DisplayName("Quando altero o codigo de barra com dados válidos")
+        void alterarCodigoDoProduto() throws Exception {
+            /* AAA Pattern */
+            //Arrange
+            produto.setCodigoBarra("7899137500117");
+            //Act
+            String responseJsonString = driver.perform(put("/v1/produtos/" + produto.getId())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(produto)))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            Produto resultado = objectMapper.readValue(responseJsonString, Produto.ProdutoBuilder.class).build();
+            //Assert
+            assertEquals("7899137500117", resultado.getCodigoBarra());
+        }
+
         @Test
         @DisplayName("Quando o codigo de barras tem digito verificador invalido")
         void digitoVerificadorInvalido() {

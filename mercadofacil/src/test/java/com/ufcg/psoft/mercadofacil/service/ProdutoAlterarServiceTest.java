@@ -96,7 +96,7 @@ public class ProdutoAlterarServiceTest {
     }
 
     @Test
-    @DisplayName("Quando o preço é menor ou igual a zero")
+    @DisplayName("Quando altero o preco do produto com dados inválidos")
     void precoMenorIgualAZero() {
         //Arrange
         produto.setPreco(0.0);
@@ -107,6 +107,34 @@ public class ProdutoAlterarServiceTest {
         );
         //Assert
         assertEquals("Preco invalido!", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Quando altero o nome do produto com dados invalidos")
+    void alterarNomeInvalido() {
+        //Arrange
+        produto.setNome(null);
+        //Act
+        RuntimeException thrown = assertThrows(
+                RuntimeException.class,
+                () -> driver.alterar(produto)
+        );
+        //Assert
+        assertEquals("Atributos faltando!", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Quando altero o fabricante do produto com dados invalidos")
+    void alterarFabricanteInvalido() {
+        //Arrange
+        produto.setFabricante(null);
+        //Act
+        RuntimeException thrown = assertThrows(
+                RuntimeException.class,
+                () -> driver.alterar(produto)
+        );
+        //Assert
+        assertEquals("Atributos faltando!", thrown.getMessage());
     }
 
     @Test
